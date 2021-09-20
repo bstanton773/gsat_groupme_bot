@@ -1,7 +1,10 @@
-import requests
-import arrow
 import json
 import os
+import time
+
+import arrow
+import requests
+import schedule
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -46,7 +49,8 @@ def build_form(game):
     return request_body
 
 def create_poll(game):
-    url = "https://api.groupme.com/v3/poll/71088558"
+    group_id = os.environ.get('GROUPME_GROUP_ID')
+    url = f"https://api.groupme.com/v3/poll/{group_id}"
     request_body = json.dumps(build_form(game))
     
     headers = {
@@ -65,3 +69,14 @@ def run():
         kickoff = arrow.get(game['commence_time'])
         if kickoff < now.shift(hours=3):
             create_poll(game)
+
+
+schedule.every().monday.at('22:00').do(run)
+schedule.every().thursday.at('22:00').do(run)
+schedule.every().sunday.at('15:00').do(run)
+schedule.every().sunday.at('18:00').do(run)
+schedule.every().sunday.at('22:00').do(run)
+
+while True:
+    schedule.run_pending()
+    time.sleep(1)
