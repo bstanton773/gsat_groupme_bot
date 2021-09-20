@@ -70,33 +70,11 @@ def run():
         if kickoff < now.shift(hours=3):
             create_poll(game)
 
-def test():
-    print('This is working')
-    rb = {
-        'subject': "This is a test",
-        'options': [{'title': "1"}, {'title': "2"}],
-        'expiration': int(arrow.utcnow().shift(hours=1).timestamp()),
-        'visibility': 'public',
-        'type': 'multi'
-    }
-    request_body = json.dumps(rb)
-    url = "https://api.groupme.com/v3/poll/71088558"
-    
-    
-    headers = {
-        'x-access-token': os.environ.get('API_KEY_GROUPME'),
-        'Content-Type': 'application/json'
-        }
-    response = requests.post(url, data=request_body, headers=headers)
-    return response
-
-schedule.every().monday.at('22:45').do(test)
-
-# # schedule.every().monday.at('22:00').do(run)
-# # schedule.every().thursday.at('22:00').do(run)
-# # schedule.every().sunday.at('15:00').do(run)
-# # schedule.every().sunday.at('18:00').do(run)
-# # schedule.every().sunday.at('22:00').do(run)
+schedule.every().monday.at('22:00').do(run)
+schedule.every().thursday.at('22:00').do(run)
+schedule.every().sunday.at('15:00').do(run)
+schedule.every().sunday.at('18:00').do(run)
+schedule.every().sunday.at('22:00').do(run)
 
 while True:
     schedule.run_pending()
