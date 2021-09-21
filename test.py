@@ -29,8 +29,11 @@ def test():
     response = requests.post(url, data=request_body, headers=headers)
     return response
 
-schedule.every().minute.at(':01').do(test)
+# schedule.every().minute.at(':01').do(test)
 
-while True:
-    schedule.run_pending()
-    time.sleep(1)
+# while True:
+#     schedule.run_pending()
+#     time.sleep(1)
+
+
+test()
