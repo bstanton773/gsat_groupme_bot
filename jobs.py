@@ -4,7 +4,6 @@ import time
 
 import arrow
 import requests
-import schedule
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -71,12 +70,4 @@ def run():
             create_poll(game)
 
 
-schedule.every().monday.at('22:00').do(run)
-schedule.every().thursday.at('22:00').do(run)
-schedule.every().sunday.at('15:00').do(run)
-schedule.every().sunday.at('18:00').do(run)
-schedule.every().sunday.at('22:00').do(run)
-
-while True:
-    schedule.run_pending()
-    time.sleep(1)
+run()
