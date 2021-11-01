@@ -19,7 +19,7 @@ def get_game_data():
     return r.json()
 
 def build_form(game):
-    subject = f"{game['home_team']} vs. {game['away_team']}"
+    subject = f"{game['away_team']} @ {game['home_team']}"
     start_time = arrow.get(game['commence_time'])
     books = game['bookmakers']
     books.sort(key=lambda x: x['key'])
