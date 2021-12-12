@@ -23,7 +23,7 @@ def build_form(game):
     start_time = arrow.get(game['commence_time'])
     books = game['bookmakers']
     books.sort(key=lambda x: x['key'])
-    book = books[-1]
+    book = books[0]
     options = []
     
     for market in book['markets']:
