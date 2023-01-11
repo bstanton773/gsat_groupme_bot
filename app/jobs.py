@@ -67,9 +67,12 @@ def run():
     #     return
     data = get_game_data()
     output = []
+    count = 0
     for game in data:
         kickoff = arrow.get(game['commence_time'])
         # if kickoff < now.shift(hours=3):
-        output.append(create_poll(game))
+        if count < 1:
+            output.append(create_poll(game))
+        count += 1
     return output
 
