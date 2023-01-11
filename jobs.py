@@ -63,13 +63,13 @@ def create_poll(game):
 
 def run():
     now = arrow.utcnow()
-    if now.format('dddd') not in {'Saturday', 'Sunday', 'Monday'}:
-        return
+    # if now.format('dddd') not in {'Saturday', 'Sunday', 'Monday'}:
+    #     return
     data = get_game_data()
+    output = []
     for game in data:
         kickoff = arrow.get(game['commence_time'])
-        if kickoff < now.shift(hours=3):
-            create_poll(game)
+        # if kickoff < now.shift(hours=3):
+        output.append(create_poll(game))
+    return output
 
-
-run()
