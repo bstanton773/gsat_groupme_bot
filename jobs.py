@@ -1,6 +1,5 @@
 import json
 import os
-import time
 
 import arrow
 import requests
@@ -14,7 +13,7 @@ def get_game_data():
     api_key = os.environ.get('API_KEY_BET')
     sport = 'americanfootball_nfl'
     regions = 'us'
-    markets = 'spreads,totals'
+    markets = 'spreads'
     r = requests.get(f'{base_url}/sports/{sport}/odds?apiKey={api_key}&regions={regions}&markets={markets}')
     return r.json()
 
@@ -28,22 +27,23 @@ def build_form(game):
     
     for market in book['markets']:
         for outcome in market['outcomes']:
-            if market['key'] == 'spreads':
-                spread = outcome.get('point', 'PK')
-                try:
-                    spread = str(spread) if spread < 0 else f'+{str(spread)}'
-                except:
-                    spread = spread
-                options.append({'title': f"{outcome['name']} {spread}"})
-            else:
-                options.append({'title': f"{outcome['name']} {outcome['point']}"})
-    options.append({'title': "No Bet"})
+            spread = outcome.get('point', 'PK')
+            try:
+                str_spread = str(spread) if spread < 0 else f'+{str(spread)}'
+            except:
+                str_spread = spread
+            if spread > 0:
+                options.append({'title': f"{outcome['name']} {str_spread} (1 point)"})
+                options.append({'title': f"{outcome['name']} ML (3 points)"})
+            elif spread < 0:
+                options.append({'title': f"{outcome['name']} {str_spread} (2 points)"})
+                options.append({'title': f"{outcome['name']} ML (1 point)"})
     request_body = {
         'subject': subject,
         'options': options,
         'expiration': int(start_time.shift(minutes=-15).timestamp()),
-        'visibility': 'public',
-        'type': 'multi'
+        'visibility': 'anonymous',
+        'type': 'single'
     }
     return request_body
 
@@ -63,7 +63,7 @@ def create_poll(game):
 
 def run():
     now = arrow.utcnow()
-    if now.format('dddd') not in {'Thursday', 'Sunday', 'Monday'}:
+    if now.format('dddd') not in {'Saturday', 'Sunday', 'Monday'}:
         return
     data = get_game_data()
     for game in data:
